@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicinal Plant Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset & basics */
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #e0f2e0;
+      color: #2e7d32;
+      overflow-x: hidden;
+    }
+    img{
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Center container both vertically & horizontally */
+    .container {
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* vertical center */
+      align-items: center;     /* horizontal center */
+      text-align: center;
+      padding: 20px;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border: none;
+    }
+
+    .main-title {
+      font-size: 3.5em;
+      font-weight: 700;
+      margin-bottom: 0.2em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      font-size: 1.5em;
+      font-weight: 400;
+      margin-bottom: 2em;
+      line-height: 1.3;
+    }
+
+    .identify-button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #e0f2e0;
+      background-color: #2e7d32;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .identify-button:hover {
+      background-color: #1b5e20;
+      transform: translateY(-2px);
+    }
+
+    @media (min-width: 768px) {
+      .main-title {
+        font-size: 4.5em;
+      }
+      .subtitle {
+        font-size: 1.8em;
+      }
+      .identify-button {
+        font-size: 1.3em;
+        padding: 18px 35px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .main-title {
+        font-size: 5.5em;
+      }
+      .subtitle {
+        font-size: 2em;
+      }
+      .identify-button {
+        font-size: 1.4em;
+      }
+    }
+
+    .plant-head{
+      border: none;
+      height: auto;
+      text-align: center;
+      background-color: #81c784;
+      color: rgba(0, 0, 0, 0.815);
+      
+    }
+    .plant-details{
+      border: none;
+      height: auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+    }
+    .plant-box{
+      border: solid 3px rgb(255, 0, 0);
+      width: 350px;
+      height: 350px;
+      position: relative; 
+      display: inline-block;
+      margin-bottom: 50px;
+    }
+    .plant-box img {
+      display: block; 
+      max-width: 100%; 
+      height: auto;
+    }
+
+    .image-text {
+      position: absolute;
+      top: 50%; /* Adjust as needed for vertical positioning */
+      left: 50%; /* Adjust as needed for horizontal positioning */
+      transform: translate(-50%, 200%); /* Centers the text precisely */
+      color: white; /* Text color */
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+      padding: 10px;
+      font-size:16px;
+      text-align: center;
+      border-radius: 10px;
+    }
+    /* Hamburger Icon */
+    #hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      padding: 10px 15px;
+      background-color: #2e7d32;
+      color: white;
+      border-radius: 5px;
+      z-index: 1101;
+      user-select: none;
+    }
+
+    /* Slide Panel */
+    #slidePanel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: rgba(33, 70, 1, 0.897);
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(8px);
+      overflow-x: hidden;
+      transition: width 0.3s ease;
+      z-index: 1100;
+      padding-top: 60px;
+      color: white;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.5);
+    }
+
+    /* Close button inside panel */
+    #slidePanel .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 36px;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #slidePanel .panel-content {
+      padding: 20px 30px;
+    }
+
+    #slidePanel a {
+      color: rgb(255, 217, 0);
+      text-decoration: none;
+      display: block;
+      font-size: 1.2em;
+      margin: 15px 0;
+      transition: color 0.2s ease;
+    }
+
+    #slidePanel a:hover {
+      color: #81c784;
+    }
+    footer{
+      text-align: center;
+      background-color: aliceblue;
+      color: red;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+  <!-- Hamburger Icon -->
+  <span id="hamburger" onclick="openPanel()">&#9776;</span>
+
+  <!-- Slide Panel -->
+  <div id="slidePanel">
+    <a href="javascript:void(0)" class="close-btn" onclick="closePanel()">&times;</a>
+    <div class="panel-content">
+      <h2>Menu</h2>
+      <a href="index.html">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1 class="main-title">Medicinal Plant Detection</h1>
+    <p class="subtitle">Discover the healing power of nature</p>
+    <a href="http://13.126.176.207/" class="identify-button">Identify Plant Now</a>
+  </div>
+
+  <h1 class="plant-head">Plant Details Include this Webpage</h1>
+
+  <div class="plant-details">
+    <div class="plant-box">
+      <a href="Plant Details/0.html"><img src="/ images/Aloe-Vera.png"></a>
+      <div class="image-text">
+        Aloe-Vera
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Betel.png">
+      <div class="image-text">
+        Betel
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Culantro.png">
+      <div class="image-text">
+        Culantro
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Floating Penywort.png">
+      <div class="image-text">
+        Floating Penywort
+      </div>
+    </div>
+    <div class="plant-box">
+      <img src="/ images/Kalanchoe Pinnata.png">
+      <div class="image-text">
+        Kalanchoe Pinnata
+      </div>
+    </div>
+    
+    <div class="plant-box">
+      <img src="/ images/Mikania Micrantha.png">
+      <div class="image-text">
+        Mikania Micrantha
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Mint.png">
+      <div class="image-text">
+        Mint
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Papermint.png">
+      <div class="image-text">
+        Papermint
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Taro.png">
+      <div class="image-text">
+        Taro
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Water Spinach.png">
+      <div class="image-text">
+        Water Spinach
+      </div>
+    </div>
+
+    <div class="plant-box">
+      <img src="/ images/Wedelia.png">
+      <div class="image-text">
+        Wedelia
+      </div>
+    </div>
+    
+  </div>
+  <footer><marquee>@this webpage made for Medicinal Plant Detection Which are available in Assam</marquee></footer>
+
+  <script>
+    function openPanel() {
+      document.getElementById("slidePanel").style.width = "250px";
+      document.getElementById("hamburger").style.display = "none";
+      // Optional: disable scroll on body when panel open
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePanel() {
+      document.getElementById("slidePanel").style.width = "0";
+      document.getElementById("hamburger").style.display = "inline-block";
+      document.body.style.overflow = '';
+    }
+  </script>
+
+</body>
+</html>
